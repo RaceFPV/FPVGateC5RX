@@ -178,7 +178,8 @@ for 0 and for 255). On the bench the floor with the VTX off is about -94, and
 a VTX at 1 m about -48. Setting the top a few dB above your gate-pass level leaves
 room for close passes.
 
-**Optional soft ceiling:** `knee -55 6` makes strong signals bunch together,
+**Optional soft ceiling:** `knee <dB> 6`, with `<dB>` a few below your
+gate-pass level (for example `knee -55 6`), makes strong signals bunch together,
 rather like an RX5808 that saturates, while still giving a peak. `knee off`
 removes it. Then `save`.
 
@@ -193,16 +194,17 @@ removes it. Then `save`.
 
 | Band | Works? |
 |---|---|
-| Raceband R1-R7 | Yes |
-| Raceband R8 (5917 MHz) | Yes, tested end to end with FPVGate |
+| Raceband R1-R8 | Yes, all tested with a VTX through FPVGate |
 | Bands A, B and F | Yes, all channels |
 | Band E, E1-E5 | Yes |
-| Band E, E6-E8 (5905, 5925, 5945 MHz) | Should work, untested |
+| Band E, E6-E8 (5905, 5925, 5945 MHz) | E6 tunes through FPVGate; none tested with a VTX yet |
 | Band L, L1-L8 | Should work, untested |
 
-R8, E6-E8 and L1-L4 are outside the Wi-Fi channels, so the C5 tunes them
-directly in the radio instead (see [EXTENDED_TUNING.md](EXTENDED_TUNING.md)).
-Nothing above about 5960 MHz is usable.
+Most channels are tuned through the nearest Wi-Fi channel. Those that are
+outside the Wi-Fi channels (R8, E6-E8, L1-L4) or would be more than 5 MHz off
+centre (R3, B1-B3) are tuned directly in the radio instead (see
+[EXTENDED_TUNING.md](EXTENDED_TUNING.md)). Nothing above about 5960 MHz is
+usable.
 
 ## 12. Troubleshooting
 
@@ -215,7 +217,7 @@ Nothing above about 5960 MHz is usable.
 | The C5 doesn't follow FPVGate's channel | Bus wiring | Type `bus`. `frames=0` means nothing is arriving. Idle should show `SEL=...(1) CLK=...(0)`; if they're the other way round, SEL and CLK are swapped. |
 | RSSI is stuck at 255 | The top of the calibration is too low | Raise it with `cal <lo> <hi>` |
 | FPVGate reads about 241 and ignores `out 0` / `out 255` | The sigma-delta clock is off (older firmware, after a USB reset) | Update the firmware, which fixes it automatically, or power-cycle the C5. `bus` shows `RSSI=GPIO10 high 100%` when it's stuck. |
-| The background jumps about with the VTX off | Wi-Fi or other 5 GHz traffic on that channel | With the VTX off, type `cal lo` to raise the bottom of the scale |
+| The background jumps about with the VTX off | Wi-Fi or other 5 GHz traffic on that channel. The firmware removes bursts shorter than 8 ms; longer ones get through. | `raw 2000` shows the raw readings. With the VTX off, `cal lo` raises the bottom of the scale; `premin 12` removes longer bursts. |
 | FPVGate shows one channel but the RSSI ignores the VTX | The C5 restarted and went back to its boot frequency. FPVGate only sends a channel when it changes, so it doesn't know. | `s` shows the C5's frequency. In FPVGate, select another channel and then yours again. |
 | The RSSI rises in two steps when the VTX powers up | The VTX starts at low power, then switches to full power | That's the VTX, not the C5. `knee -55 6` makes it less visible. |
 

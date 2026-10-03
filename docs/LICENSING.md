@@ -93,10 +93,12 @@ whether it contains or is based on their code. It doesn't.
 The last row matters most. The first plan, reading the chip's noise-floor
 register, **didn't work** on real hardware. The method that works was found on
 our own bench: Espressif's per-signal RSSI with the AGC on automatic, plus a
-30 ms peak-hold to remove the AGC's regular dips. We got there with diagnostic
-commands written for the job, by switching a VTX on and off and comparing the
-readings. That's an independent result, not something taken from another
-project.
+30 ms peak-hold to remove the AGC's regular dips. It was later replaced, also
+on our own bench, by the PHY's signal-RSSI mode (which measures all the time
+instead of freezing between detections), with an 8-reading minimum to remove
+Wi-Fi bursts. We got there with diagnostic commands written for the job, by
+switching a VTX on and off, capturing raw 1 ms readings and comparing them.
+That's an independent result, not something taken from another project.
 
 Each technical fact used, and where it came from, is listed in
 [`PROVENANCE.md`](PROVENANCE.md), so the claim can be checked.

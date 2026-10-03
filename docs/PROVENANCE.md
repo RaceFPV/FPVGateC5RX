@@ -34,11 +34,14 @@ in [LICENSING.md](LICENSING.md).
 | The C5 receives 5180 to 5885 MHz and has a single radio | ESP32-C5 datasheet |
 | The C5's 5 GHz channels are 36-64, 100-144 and 149-177 | Espressif `esp_wifi_types_generic.h` (Apache-2.0) |
 | How to start Wi-Fi in 5 GHz-only mode with every channel allowed | Espressif `esp_wifi.h` API documentation (Apache-2.0) |
-| **How the firmware reads the signal:** `phy_get_rssi()`, with the AGC on automatic, follows an analog FPV signal; the noise-floor register doesn't | **Our own bench tests** (a VTX switched on and off, readings compared). What the function returns: Espressif's PHY library (Apache-2.0). |
+| *(Superseded, see the signal-RSSI row below.)* `phy_get_rssi()`, with the AGC on automatic, follows an analog FPV signal; the noise-floor register doesn't | **Our own bench tests** (a VTX switched on and off, readings compared). What the function returns: Espressif's PHY library (Apache-2.0). |
 | `phy_11p_set(1, 0)` (802.11p mode) improves reception from 5750 to 5990 MHz, about 14% less noise on R8 | A public tip on X (@Ready4Sushi, 2026-10-01; a fact, no code. Its chart compares against esp-sdr, which is GPL: none of its code was looked at), confirmed by **our own bench test** on R8. The function's arguments: Espressif's PHY library (Apache-2.0). |
-| `phy_get_rssi()` only updates on receive events; `phy_check_sigrssi_en(1)` + `phy_get_sigrssi()` measure continuously | **Our own reading** of Espressif's PHY library (Apache-2.0), confirmed by **our own bench tests** (VTX on/off on R8 and R4). |
+| **How the firmware reads the signal now:** `phy_get_rssi()` only updates on receive events; `phy_check_sigrssi_en(1)` + `phy_get_sigrssi()` measure continuously | **Our own reading** of Espressif's PHY library (Apache-2.0), confirmed by **our own bench tests** (VTX on/off on R8 and R4). |
 | Above channel 14 the PHY takes the frequency in MHz, and `RFChannelSel(chan, bw)` tunes it to any MHz value | **Our own reading** of Espressif's PHY library (Apache-2.0): `phy_chan_to_freq`, `RFChannelSel`, `phy_chip_set_chan`. See EXTENDED_TUNING.md. |
-| The reading refreshes about every 25 ms, with a 2 to 3 ms dip of about 10 dB; a 30 ms peak-hold removes it | **Our own bench tests** (1 ms captures) |
+| *(Old reading.)* The reading refreshes about every 25 ms, with a 2 to 3 ms dip of about 10 dB; a 30 ms peak-hold removes it | **Our own bench tests** (1 ms captures) |
+| With the signal-RSSI reading, background Wi-Fi shows as 1-3 ms spikes about every 24 ms, and a VTX dips 6-14 dB for 1-6 ms; an 8-reading minimum before the 30 ms peak-hold removes the first and keeps bridging the second | **Our own bench tests** (2 s raw 1 ms captures on R5 and R8, VTX off and on, modelled and then checked on hardware) |
+| Tuning more than 5 MHz off a Wi-Fi channel's centre loses signal (R3 at 12 MHz: -74 against -49 dBm tuned exactly) | **Our own bench tests** |
+| The sigma-delta's clock gate (`SDM.misc.sigmadelta_clk_en`) can be found off after a USB reset | **Our own bench tests** (register dump with the output stuck); register layout from Espressif's `gpio_ext_struct.h` and `hal/sdm_ll.h` (Apache-2.0) |
 | The sigma-delta output, for an analog voltage without a DAC | Espressif `soc_caps.h` and the `driver/sdm.h` API (Apache-2.0) |
 | Interrupt-safe pin access with `gpio_ll_*` | Espressif `hal/gpio_ll.h` (Apache-2.0) |
 | The Arduino core only creates `HWCDCSerial` with USB-CDC-on-boot | Arduino-ESP32 core headers (a fact about its API) |

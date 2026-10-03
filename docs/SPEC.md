@@ -26,8 +26,8 @@ because the C5 has only one radio.
                                      controller ----> radio: tune the channel,
                                          |                   read the RSSI (1 kHz)
                                          v
-                                     RSSI pipeline: peak-hold, median, smoothing,
-                                         |          soft ceiling, 0 to 255
+                                     RSSI pipeline: pre-minimum, peak-hold, median,
+                                         |          smoothing, soft ceiling, 0 to 255
                                          v
  ADC <---RSSI--- RC filter <--- GPIO10 sigma-delta output
  bus read <------------------------- RSSI registers (digital)
@@ -127,8 +127,10 @@ From a reading in dBm to FPVGate's 0 to 255, in `core/rssi_pipeline.*`:
    value and is marked invalid, as FPVGate expects from an RX5808. If no new
    reading arrives for 200 ms, it's marked stalled.
 
-The defaults are `dbLo -90`, `dbHi -20`, no smoothing and no soft ceiling. Our
-bench setup used `cal -80 -15` and `knee -55 6`.
+The defaults are `dbLo -90`, `dbHi -20`, a pre-minimum of 8, a 30 ms
+peak-hold, no smoothing and no soft ceiling. Our bench setup (signal-RSSI
+reading, VTX at about 1 m) used `cal -92 -30` and no knee: about -94 dBm with
+the VTX off and -48 on.
 
 ## The outputs
 

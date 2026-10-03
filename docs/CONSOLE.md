@@ -51,8 +51,8 @@ f=5769 R4 st=TRACKING db=-25.5 rssi=214 valid=1
 |---|---|---|
 | `cal` | Show the calibration and shaping settings | `cal` |
 | `cal lo` or `cal hi` | Use the current reading as the bottom or top of the scale | With the VTX off: `cal lo` |
-| `cal <lo> <hi>` | Set the levels, in dBm, that read as 0 and 255 | `cal -80 -15` |
-| `knee <dB> <ratio>` or `knee off` | Soft ceiling. Above `<dB>`, every `<ratio>` dB of extra signal only counts as 1 dB, so strong signals bunch together but still peak. | `knee -55 6` |
+| `cal <lo> <hi>` | Set the levels, in dBm, that read as 0 and 255 | `cal -92 -30` |
+| `knee <dB> <ratio>` or `knee off` | Soft ceiling. Above `<dB>`, every `<ratio>` dB of extra signal only counts as 1 dB, so strong signals bunch together but still peak. Off by default. | `knee -45 6` |
 | `ema <alpha>` | Smoothing, from 0.01 to 1. **1 means off, the default.** Lower values smooth more but round off the edges. | `ema 1` |
 | `premin [n]` | Lowest of the last `n` readings, before the peak-hold. Removes Wi-Fi bursts shorter than `n` ms. Default 8; 1 = off. Not saved. | `premin 8` |
 | `hold [ms]` | Peak-hold window, which bridges the VTX's short dips. Default 30; 0 = off. Not saved. | `hold 40` |
@@ -61,7 +61,8 @@ f=5769 R4 st=TRACKING db=-25.5 rssi=214 valid=1
 | `save` | Store all of the above | `save` |
 | `defaults` | Go back to the default settings (not stored until you `save`) | `defaults` |
 
-The 30 ms peak-hold that removes the C5's regular dips is always on.
+`premin` and `hold` are for experiments; the defaults (8 and 30) were chosen
+from 1 ms captures, see SPEC.md and EXTENDED_TUNING.md.
 
 ## Connection to FPVGate
 

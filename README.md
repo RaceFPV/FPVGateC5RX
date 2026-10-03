@@ -36,8 +36,9 @@ more ESP32-C5 boards.
 - **Behaves like an RX5808:** takes RX5808 tuning commands, answers FPVGate's
   frequency check, and handles power-down and reset.
 - **Analog RSSI output**, and the RSSI can also be read digitally over the bus.
-- **Fast, clean RSSI:** a 30 ms peak-hold hides the radio's regular dips
-  without smoothing off the edges.
+- **Fast, clean RSSI:** a live signal-strength reading from the radio, with
+  short Wi-Fi bursts filtered out and the VTX's own short dips bridged, without
+  smoothing off the edges.
 - **Calibration and a soft ceiling:** fit your real signal levels to FPVGate's
   0 to 255 scale, and optionally make strong signals bunch together like a
   saturating RX5808.
